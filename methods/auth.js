@@ -25,40 +25,51 @@ const {
 // @route   POST /api/v1/auth
 // @access  Private
 exports.userLogin = async(req, res, next) => {
-  const { email, password } = req.body
-  
-  // check user exist
-  const userExist = await User.findOne({ 'credentials.emails.main': email })
-  if(!userExist) return res.status(401).json({
-    success: false,
-    error: `Incorrect username or password.`,
-    data: {}
-  })
-  
-  // check if password matched
-  const valiPassword = await bcrypt.compare(password, userExist.credentials.password)
-  if(!valiPassword) return res.status(401).json({
-    success: false,
-    error: `Incorrect password or username.`,
-    data: {}
-  })
-  
-  // assign new session data for user
-  await logIn(req, userExist._id)
+  try {
+    const { email, password } = req.body
+    // console.log(req.body)
+    // check user exist
+    const userExist = await User.findOne({ 'credentials.emails.main': email })
+    if(!userExist) return res.status(401).json({
+      success: false,
+      error: `Incorrect username or password.`,
+      data: {}
+    })
+    
+    // check if password matched
+    const valiPassword = await bcrypt.compare(password, userExist.credentials.password)
+    if(!valiPassword) return res.status(401).json({
+      success: false,
+      error: `Incorrect password or username.`,
+      data: {}
+    })
+    
+    // assign new session data for user
+    await logIn(req, userExist._id)
 
-  // set all available data to redis
-  await setDefaultAllData()
+    // set all available data to redis
+    await setDefaultAllData()
 
-  // return with success message
-  return res.status(200).json({
-    success: true,
-    count: userExist.length,
-    data: {
-      uid: userExist._id,
-      sato: req.session.createdAt + SESS_ABSOULTE_TIMEOUT
-      // sato: (req.session.createdAtReact).setTime((req.session.createdAtReact).getTime() + SESS_ABSOULTE_TIMEOUT)
-    }
-  })
+    // return with success message
+    return res.status(200).json({
+      success: true,
+      count: userExist.length,
+      data: {
+        uid: userExist._id,
+        email: userExist?.credentials?.emails?.main
+        // sato: req.session.createdAt + SESS_ABSOULTE_TIMEOUT
+        // sato: (req.session.createdAtReact).setTime((req.session.createdAtReact).getTime() + SESS_ABSOULTE_TIMEOUT)
+      }
+    })
+  } catch(err) {
+    // return with error message
+    return res.status(500).json({
+      success: false,
+      count: 0,
+      error: 'Having trouble checking the credentials. Please try login later.',
+      data: err
+    })
+  }
 
   // return await Project.find().sort({ createdAt: 1 })
   // .populate('techs')

@@ -47,7 +47,8 @@ const adminAccessComment = (req, res, next) => {
 // @purpose   User login interface
 // @route     /api/v1/auth
 router.route('/')
-  .post(redirect2Home, userLogin)
+  // .post(redirect2Home, userLogin)
+  .post(userLogin)
 
 // @access    Portfolio V4 Editting Dashboard
 // @purpose   Log user out

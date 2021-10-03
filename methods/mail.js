@@ -183,7 +183,7 @@ exports.getPrivateMails = async (req, res, next) => {
     let redisAllData = await getAllData()
     let contacts = redisAllData.contacts
     let mails = redisAllData.mails
-    
+    console.log(req.session.userId)
     // get user contact info
     let contact = contacts.find(state => state.creator === req.session.userId)
     if(!contact) return res.status(400).json({

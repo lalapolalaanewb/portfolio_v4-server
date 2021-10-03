@@ -17,14 +17,16 @@ const {
 // @route   POST /api/v1/dashboard
 // @access  Private (Require sessionId & uid)
 router.route('/')
-  .get(redirect2Login, getPrivateDashboard)
+  // .get(redirect2Login, getPrivateDashboard)
+  .get(getPrivateDashboard)
   // .get(getPrivateDashboard)
 
 // @desc    Portfolio V4 Dashboard (Reset All Redis Data)
 // @route   POST /api/v1/dashboard/resetredis
 // @access  Private (Require sessionId & uid)
 router.route('/resetredis')
-  .get(redirect2Login, updatePrivateDashboardRedisAllData)
+  // .get(redirect2Login, updatePrivateDashboardRedisAllData)
+  .get(updatePrivateDashboardRedisAllData)
   // .get(updatePrivateDashboardRedisAllData)
 
 /** Export */

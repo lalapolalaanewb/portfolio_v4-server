@@ -71,25 +71,25 @@ exports.getPrivateDashboard = async(req, res, next) => {
     const redisAllData = await getDefaultAllData()
     
     // get ACTIVE user
-    // let user = await User.aggregate([
-    //   {$match: { status: 1 }}, 
-    //   { $project: { 
-    //     homes: { $size: '$homes' },
-    //     abouts: { $size: '$abouts' },
-    //     socialMedias: { $size: '$socialMedias' },
-    //     educations: { $size: '$educations' },
-    //     jobs: { $size: '$jobs' },
-    //     skills: { $size: '$skills' },
-    //     projects: { $size: '$projects' },
-    //     posts: { $size: '$posts' }, 
-    //   } }
-    // ])
-    // // - throw an error if user not found
-    // if(!user) return res.status(400).json({
-    //   success: false,
-    //   error: `Failed to get active user data from User Collection`,
-    //   data: {}
-    // }); console.log(user[0])
+    let user = await User.aggregate([
+      {$match: { status: 1 }}, 
+      { $project: { 
+        homes: { $size: '$homes' },
+        abouts: { $size: '$abouts' },
+        socialMedias: { $size: '$socialMedias' },
+        educations: { $size: '$educations' },
+        jobs: { $size: '$jobs' },
+        skills: { $size: '$skills' },
+        projects: { $size: '$projects' },
+        posts: { $size: '$posts' }, 
+      } }
+    ])
+    // - throw an error if user not found
+    if(!user) return res.status(400).json({
+      success: false,
+      error: `Failed to get active user data from User Collection`,
+      data: {}
+    }); console.log(user[0])
     
     return res.status(200).json({
       success: true,
