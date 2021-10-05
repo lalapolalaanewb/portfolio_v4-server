@@ -45,7 +45,7 @@ exports.userLogin = async(req, res, next) => {
     })
     
     // assign new session data for user
-    await logIn(req, userExist._id)
+    await logIn(req, userExist._id); // console.log(req.sessionID); console.log(req.session)
 
     // set all available data to redis
     await setDefaultAllData()
@@ -55,6 +55,7 @@ exports.userLogin = async(req, res, next) => {
       success: true,
       count: userExist.length,
       data: {
+        sessionID: req.sessionID,
         uid: userExist._id,
         email: userExist?.credentials?.emails?.main
         // sato: req.session.createdAt + SESS_ABSOULTE_TIMEOUT

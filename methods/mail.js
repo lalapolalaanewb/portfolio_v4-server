@@ -11,7 +11,7 @@ const {
   // Redis Data
   getDefaultAllData,
   // Redis Promises
-  setAsync
+  setAsync, getAsync
 } = require('../controllers')
 
 /** Page Specific Functions */
@@ -183,9 +183,14 @@ exports.getPrivateMails = async (req, res, next) => {
     let redisAllData = await getAllData()
     let contacts = redisAllData.contacts
     let mails = redisAllData.mails
-    console.log(req.session.userId)
+    // console.log('session userId: ', req.session.userId)
+    // console.log('new sessionID: ', req.sessionID)
+    // console.log('new session: ', req.session)
+    // console.log('old sessionID: ', req.query?.sessionID)
+    const sessionData = JSON.parse(await getAsync(`sess:${req.query?.sessionID}`))
+    // console.log('old session', sessionData)
     // get user contact info
-    let contact = contacts.find(state => state.creator === req.session.userId)
+    let contact = contacts.find(state => state.creator === sessionData?.userId)
     if(!contact) return res.status(400).json({
       success: false,
       error: `Failed to get active user contact data from Contact Collection`,
