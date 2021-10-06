@@ -187,10 +187,12 @@ exports.getPrivateMails = async (req, res, next) => {
     // console.log('new sessionID: ', req.sessionID)
     // console.log('new session: ', req.session)
     // console.log('old sessionID: ', req.query?.sessionID)
-    const sessionData = JSON.parse(await getAsync(`sess:${req.query?.sessionID}`))
+    // const authHeader = await req.get('Authorization')
+    // const sessionID = authHeader.split(' ')[1]
+    // const sessionData = JSON.parse(await getAsync(`sess:${sessionID}`))
     // console.log('old session', sessionData)
     // get user contact info
-    let contact = contacts.find(state => state.creator === sessionData?.userId)
+    let contact = contacts.find(state => state.creator === res.locals.userId)
     if(!contact) return res.status(400).json({
       success: false,
       error: `Failed to get active user contact data from Contact Collection`,

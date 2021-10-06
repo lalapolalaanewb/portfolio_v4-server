@@ -54,7 +54,7 @@ router.route('/')
 // @purpose   Log user out
 // @route     /api/v1/auth/logout
 router.route('/logout')
-  .post(redirect2Login, userLogout)
+  .get(redirect2Login, userLogout)
 
 // @access    Portfolio V4 Editting Dashboard
 // @purpose   Check user isAuthenticated

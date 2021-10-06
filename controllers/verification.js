@@ -1,14 +1,17 @@
 /** Verification Functions Handler */
+
+const { getAsync } = require("./redis-promises")
+
 // Verify not loggeed-in user
 exports.redirect2Login = async(req, res, next) => { // console.log(req.session)
-  if(!req.session.userId) {
-    console.log('xde session server')
-    return res.status(401).json({
-      success: false,
-      error: `You are not logged-in. Please login to access the data.`,
-      data: {}
-    })
-  }
+  // if(!req.session.userId) {
+  //   console.log('xde session server')
+  //   return res.status(401).json({
+  //     success: false,
+  //     error: `You are not logged-in. Please login to access the data.`,
+  //     data: {}
+  //   })
+  // }
 
   // check if Authorization header send
   const authHeader = await req.get('Authorization')
@@ -23,8 +26,8 @@ exports.redirect2Login = async(req, res, next) => { // console.log(req.session)
   }
 
   // check if uid exist
-  const uid = authHeader.split(' ')[1] // Eg- Authorization: Bearer ejyjdgjhdgfd
-  if(!uid || uid === '') {
+  const sessionID = authHeader.split(' ')[1] // Eg- Authorization: Bearer ejyjdgjhdgfd
+  if(!sessionID || sessionID === '') {
     console.log('xde token')
     return res.status(401).json({
       success: false,
@@ -34,7 +37,12 @@ exports.redirect2Login = async(req, res, next) => { // console.log(req.session)
   }
 
   // continue
-  if(req.session.userId === uid) return next()
+  const sessionData = JSON.parse(await getAsync(`sess:${sessionID}`))
+  if(sessionData) {
+    res.locals.sessionID = sessionID
+    res.locals.userId = sessionData?.userId
+    return next()
+  }
   else {
     return res.status(401).json({
       success: false,

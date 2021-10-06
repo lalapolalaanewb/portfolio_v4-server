@@ -32,8 +32,8 @@ router.route('/public/add')
 // @route   POST /api/v1/mails/private/get
 // @access  Private (Require sessionId & uid)
 router.route('/private/get')
-  // .get(redirect2Login, getPrivateMails)
-  .get(getPrivateMails)
+  .get(redirect2Login, getPrivateMails)
+  // .get(getPrivateMails)
 
 // @desc    Portfolio V4 Mail Dashboard (Update A Mail Status Noty)
 // @route   POST /api/v1/mails/private/update/noty

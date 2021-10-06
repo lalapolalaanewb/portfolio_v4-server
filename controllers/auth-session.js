@@ -1,5 +1,6 @@
 /** Dependencies */
 // Session Vars
+const { delAsync } = require('./redis-promises')
 const { SESS_NAME, SESS_ABSOULTE_TIMEOUT } = require('./session')
 
 /** Auth Session Functions Handler */
@@ -16,23 +17,38 @@ exports.logIn = async(req, userId) => {
 // Destroy session fror logout user
 exports.logOut = async(req, res) => {
   // destroy user session
-  req.session.destroy(err => {
-    if(err) return res.status(400).json({
-      success: false,
-      error: `Having touble logging out. Please try again later.`,
-      data: {}
-    })
+  // const authHeader = await req.get('Authorization')
+  // const sessionID = authHeader.split(' ')[1]
+  const sessionDestroy = await delAsync(`sess:${res.locals.sessionID}`)
+  console.log(sessionDestroy)
 
-    // clear cookie
-    res.clearCookie(SESS_NAME)
+  // clear cookie
+  res.clearCookie(SESS_NAME)
 
-    // return to login page
-    return res.status(200).json({
-      success: true,
-      count: 0,
-      data: {}
-    })
+  // return to login page
+  return res.status(200).json({
+    success: true,
+    count: 0,
+    data: {}
   })
+
+  // req.session.destroy(err => {
+  //   if(err) return res.status(400).json({
+  //     success: false,
+  //     error: `Having touble logging out. Please try again later.`,
+  //     data: {}
+  //   })
+
+  //   // clear cookie
+  //   res.clearCookie(SESS_NAME)
+
+  //   // return to login page
+  //   return res.status(200).json({
+  //     success: true,
+  //     count: 0,
+  //     data: {}
+  //   })
+  // })
 }
 
 // Forced logout for timeout loged-in user
