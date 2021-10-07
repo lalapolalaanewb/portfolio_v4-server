@@ -9,11 +9,11 @@ const fileRemove = require('fs')
 
 const {
   // File Base FOlder Location
-  FILE_BASE_FOLDER_LOCATION = path.resolve(__dirname + '/', '../'),
+  FILE_BASE_FOLDER_LOCATION = path.resolve(__dirname + '/'),
   // Image Folder Location
-  IMAGE_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/client/public/images/',
+  IMAGE_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/public/images/',
   // Pdf Folder Location
-  PDF_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/client/public/files/'
+  PDF_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/public/files/'
 } = process.env
 
 // storage img
