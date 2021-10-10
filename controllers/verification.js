@@ -18,7 +18,7 @@ exports.redirect2Login = async(req, res, next) => { // console.log(req.session)
   console.log(authHeader)
   if(!authHeader) {
     console.log('xde header Auth')
-    return res.status(401).json({
+    return res.status(403).json({
       success: false,
       error: `You are not logged-in. Please login to access the data.`,
       data: {}
@@ -29,7 +29,7 @@ exports.redirect2Login = async(req, res, next) => { // console.log(req.session)
   const sessionID = authHeader.split(' ')[1] // Eg- Authorization: Bearer ejyjdgjhdgfd
   if(!sessionID || sessionID === '') {
     console.log('xde token')
-    return res.status(401).json({
+    return res.status(403).json({
       success: false,
       error: `You are not logged-in. Please login to access the data.`,
       data: {}
