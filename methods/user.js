@@ -64,7 +64,7 @@ exports.getPublicUserFooterPublic = async(req, res, next) => {
 
     // get active user
     let user = users.find(user => user.status === 1)
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `No active user found. Please refresh the page or try again later.`,
       data: {}
@@ -95,7 +95,7 @@ exports.getPublicUserFooterPublic = async(req, res, next) => {
       }
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get public user footer from User Collection`,
       data: err
@@ -118,7 +118,7 @@ exports.getPublicUserHome = async(req, res, next) => {
 
     // get active user
     let user = users.find(user => user.status === 1)
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `No active user found. Please refresh the page or try again later.`,
       data: {}
@@ -142,7 +142,7 @@ exports.getPublicUserHome = async(req, res, next) => {
       }
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get public user home from User Collection`,
       data: err
@@ -165,7 +165,7 @@ exports.getPublicUserAbout = async(req, res, next) => {
 
     // get active user
     let user = users.find(user => user.status === 1)
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `No active user found. Please refresh the page or try again later.`,
       data: {}
@@ -221,7 +221,7 @@ exports.getPublicUserAbout = async(req, res, next) => {
       }
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get public user about from User Collection`,
       data: err
@@ -245,7 +245,7 @@ exports.getPublicUserResume = async(req, res, next) => {
 
     // get active user
     let user = users.find(user => user.status === 1)
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `No active user found. Please refresh the page or try again later.`,
       data: {}
@@ -301,7 +301,7 @@ exports.getPublicUserResume = async(req, res, next) => {
       }
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get public user resume from User Collection`,
       data: err
@@ -324,7 +324,7 @@ exports.getPrivateUsers = async(req, res, next) => {
       data: users.sort((a, b) => a.name.firstName < b.name.firstName ? -1 : 1)
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get users from User Collection`,
       data: err
@@ -347,14 +347,14 @@ exports.addPrivateUser = async(req, res, next) => {
   if(credentials.emails.main !== 'none') {
     // check if user already exist
     const userExist = users.find(user => user.credentials.emails.main === credentials.emails.main)
-    if(userExist) return res.status(400).json({
+    if(userExist) return res.status(200).json({
       success: false,
       error: `User already exists.`,
       data: {}
     })
 
     // check if email (main) regex correct
-    if(!handleEmailRegex(credentials.emails.main)) return res.status(400).json({
+    if(!handleEmailRegex(credentials.emails.main)) return res.status(200).json({
       success: false,
       error: `Invalid email main!`,
       data: {}
@@ -363,7 +363,7 @@ exports.addPrivateUser = async(req, res, next) => {
 
   if(credentials.emails.backup !== 'none') {
     // check if email (backup) regex correct
-    if(!handleEmailRegex(credentials.emails.backup)) return res.status(400).json({
+    if(!handleEmailRegex(credentials.emails.backup)) return res.status(200).json({
       success: false,
       error: `Invalid email backup!`,
       data: {}
@@ -371,7 +371,7 @@ exports.addPrivateUser = async(req, res, next) => {
   }
 
   // check if password match
-  if(credentials.password !== credentials.passwordConfirm) return res.status(400).json({
+  if(credentials.password !== credentials.passwordConfirm) return res.status(200).json({
     success: false,
     error: `Password not match!`,
     data: {}
@@ -411,7 +411,7 @@ exports.addPrivateUser = async(req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new user data to User Collection`,
       data: err
@@ -433,7 +433,7 @@ exports.updatePrivateUserActive = async(req, res, next) => {
     // check if other user still active
     let userActive = users.find(user => user.status === 1)
     if(userActive) {
-      if(userActive._id.toString() !== userId) return res.status(400).json({
+      if(userActive._id.toString() !== userId) return res.status(200).json({
         success: false,
         error: `User (${userActive.name.firstName} ${userActive.name.lastName}) with email (${userActive.credentials.emails.main}) still ACTIVE! Please deactivate the user to continue.`,
         data: {}
@@ -449,7 +449,7 @@ exports.updatePrivateUserActive = async(req, res, next) => {
       { new: true }
     )
     // throw error if nothing gets in return
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `Error while updating user active status. Please try again later.`,
       data: {}
@@ -469,7 +469,7 @@ exports.updatePrivateUserActive = async(req, res, next) => {
       data: user
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update user active status from User Collection`,
       data: err
@@ -492,14 +492,14 @@ exports.updatePrivateUser = async(req, res, next) => {
   if(credentials.emails.main !== 'none') {
     // check if user already exist
     const userExist = users.find(user => user._id === req.params.id)
-    if(!userExist) return res.status(400).json({
+    if(!userExist) return res.status(200).json({
       success: false,
       error: `User doesn't exists.`,
       data: {}
     })
 
     // check if email (main) regex correct
-    if(!handleEmailRegex(credentials.emails.main)) return res.status(400).json({
+    if(!handleEmailRegex(credentials.emails.main)) return res.status(200).json({
       success: false,
       error: `Invalid email main!`,
       data: {}
@@ -508,7 +508,7 @@ exports.updatePrivateUser = async(req, res, next) => {
 
   if(credentials.emails.backup !== 'none') {
     // check if email (backup) regex correct
-    if(!handleEmailRegex(credentials.emails.backup)) return res.status(400).json({
+    if(!handleEmailRegex(credentials.emails.backup)) return res.status(200).json({
       success: false,
       error: `Invalid email backup!`,
       data: {}
@@ -550,7 +550,7 @@ exports.updatePrivateUser = async(req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update user data from User Collection`,
       data: err
@@ -574,21 +574,21 @@ exports.deletePrivateUser = async(req, res, next) => {
     let data = users.find(user => user._id === req.params.id)
 
     // check user data from abouts
-    if(data.abouts.length > 0) return res.status(400).json({
+    if(data.abouts.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from About Collection first`,
       data: {}
     })
 
     // check user data from homes
-    if(data.homes.length > 0) return res.status(400).json({
+    if(data.homes.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Home Collection first`,
       data: {}
     })
 
     // check user data from jobs
-    if(data.jobs.length > 0) return res.status(400).json({
+    if(data.jobs.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Job Collection first`,
       data: {}
@@ -596,7 +596,7 @@ exports.deletePrivateUser = async(req, res, next) => {
 
     // check user data from media
     let medias = mediasRedis.filter(state => state.creator === req.params.id)
-    if(medias.length > 0) return res.status(400).json({
+    if(medias.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Media Collection first`,
       data: {}
@@ -604,7 +604,7 @@ exports.deletePrivateUser = async(req, res, next) => {
 
     // check user data from media socials
     let mediaSocials = mediaSocialsRedis.filter(state => state.creator === req.params.id)
-    if(mediaSocials.length > 0) return res.status(400).json({
+    if(mediaSocials.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Media Social Collection first`,
       data: {}
@@ -612,35 +612,35 @@ exports.deletePrivateUser = async(req, res, next) => {
 
     // check user data from policies
     let policies = policiesRedis.filter(state => state.creator === req.params.id)
-    if(policies.length > 0) return res.status(400).json({
+    if(policies.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Policy Collection first`,
       data: {}
     })
 
     // check user data from posts
-    if(data.posts.length > 0) return res.status(400).json({
+    if(data.posts.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Post Collection first`,
       data: {}
     })
 
     // check user data from projects
-    if(data.projects.length > 0) return res.status(400).json({
+    if(data.projects.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Project Collection first`,
       data: {}
     })
 
     // check user data from socialMedias
-    if(data.socialMedias.length > 0) return res.status(400).json({
+    if(data.socialMedias.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Socialmedia Collection first`,
       data: {}
     })
 
     // check user data from skills
-    if(data.skills.length > 0) return res.status(400).json({
+    if(data.skills.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Skill Collection first`,
       data: {}
@@ -648,7 +648,7 @@ exports.deletePrivateUser = async(req, res, next) => {
 
     // check user data from techs
     let techs = techsRedis.filter(state => state.creator === req.params.id)
-    if(techs.length > 0) return res.status(400).json({
+    if(techs.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Tech Collection first`,
       data: {}
@@ -670,7 +670,7 @@ exports.deletePrivateUser = async(req, res, next) => {
     })
 
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete user data from User Collection`,
       data: err

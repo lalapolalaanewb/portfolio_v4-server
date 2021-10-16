@@ -50,7 +50,7 @@ exports.getPrivateUserEducation = async(req, res, next) => {
     
     // get all user edus
     let userEdus = edus.filter(edu => user.educations.includes(edu._id))
-    if(!userEdus) return res.status(400).json({
+    if(!userEdus) return res.status(200).json({
       success: false,
       error: `Failed to get user's edus data from Education Collection`,
       data: {}
@@ -65,7 +65,7 @@ exports.getPrivateUserEducation = async(req, res, next) => {
       }
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get edus data from Education Collection`,
       data: err
@@ -120,7 +120,7 @@ exports.addPrivateUserEducation = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new education data from Education Collection`,
       data: err
@@ -171,7 +171,7 @@ exports.updatePrivateUserEducation = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update education from Education Collection`,
       data: err
@@ -212,7 +212,7 @@ exports.updatePrivateUserEducationPublish = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update education publish from Education Collection`,
       data: err
@@ -233,7 +233,7 @@ exports.deletePrivateUserEducation = async(req, res, next) => {
     // check if edu is published first
     let edu = edus.find(state => state._id === req.body.eduId)
     if(edu) {
-      if(edu.status === 1) return res.status(400).json({
+      if(edu.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete education! Please unpublished the education first.`,
         data: {}
@@ -270,7 +270,7 @@ exports.deletePrivateUserEducation = async(req, res, next) => {
       data: {}
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete edu data from Education Collection`,
       data: err

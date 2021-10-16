@@ -50,7 +50,7 @@ exports.getPrivateUserJob = async(req, res, next) => {
     
     // get all user jobs
     let userJobs = jobs.filter(state => user.jobs.includes(state._id))
-    if(!userJobs) return res.status(400).json({
+    if(!userJobs) return res.status(200).json({
       success: false,
       error: `Failed to get user's jobs data from Job Collection`,
       data: {}
@@ -65,7 +65,7 @@ exports.getPrivateUserJob = async(req, res, next) => {
       }
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get jobs data from Job Collection`,
       data: err
@@ -120,7 +120,7 @@ exports.addPrivateUserJob = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new job data from Job Collection`,
       data: err
@@ -171,7 +171,7 @@ exports.updatePrivateUserJob = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update job from Job Collection`,
       data: err
@@ -212,7 +212,7 @@ exports.updatePrivateUserJobPublish = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update job publish from Job Collection`,
       data: err
@@ -233,7 +233,7 @@ exports.deletePrivateUserJob = async(req, res, next) => {
     // check if job is published first
     let job = jobs.find(state => state._id === req.body.jobId)
     if(job) {
-      if(job.status === 1) return res.status(400).json({
+      if(job.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete job! Please unpublished the job first.`,
         data: {}
@@ -270,7 +270,7 @@ exports.deletePrivateUserJob = async(req, res, next) => {
       data: {}
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete job data from Job Collection`,
       data: err

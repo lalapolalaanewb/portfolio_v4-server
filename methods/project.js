@@ -45,7 +45,7 @@ const handleGetTechIds = async (techs, techNames) => {
 
   // let techObjIds = await Technology.find().select('_id').where('name').in(techNames).exec()
   let techObjIds = techs.filter(tech => techNames.includes(tech.name))
-  if(!techObjIds) return res.status(500).json({
+  if(!techObjIds) return res.status(200).json({
     success: false,
     error: `No tech found or match with Technology Collection`,
     data: {}
@@ -104,7 +104,7 @@ exports.getPublicProjects = async(req, res, next) => {
     })
   }
   catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get projects data from Projects Collection`,
       data: err
@@ -157,7 +157,7 @@ exports.updatePublicProject = async(req, res, next) => {
     })
   }
   catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update project data from Projects Collection`,
       data: err
@@ -237,7 +237,7 @@ exports.getPrivateProjects = async(req, res, next) => {
     })
   }
   catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get projects data from Projects Collection`,
       data: err
@@ -308,7 +308,7 @@ exports.addPrivateProject = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new project data from Projects Collection`,
       data: err
@@ -352,7 +352,7 @@ exports.updatePrivateProjectimg = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update project image from Projects Collection`,
       data: err
@@ -395,7 +395,7 @@ exports.updatePrivateProjectPublish = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update project publish from Projects Collection`,
       data: err
@@ -491,7 +491,7 @@ exports.updatePrivateProject = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update project data from Projects Collection`,
       data: err
@@ -512,7 +512,7 @@ exports.deletePrivateProject = async(req, res, next) => {
     // check if project is published first
     let project = projects.find(state => state._id === req.params.id)
     if(project) {
-      if(project.status === 1) return res.status(400).json({
+      if(project.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete project! Please unpublished the project first.`,
         data: {}
@@ -552,7 +552,7 @@ exports.deletePrivateProject = async(req, res, next) => {
       data: {}
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete project data from Project Collection`,
       data: err

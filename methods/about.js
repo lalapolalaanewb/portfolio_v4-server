@@ -52,7 +52,7 @@ exports.getPrivateUserAbout = async(req, res, next) => {
     
     // get all user abouts
     let userAbouts = abouts.filter(state => user.abouts.includes(state._id))
-    if(!userAbouts) return res.status(400).json({
+    if(!userAbouts) return res.status(200).json({
       success: false,
       error: `Failed to get user's abouts data from About Collection`,
       data: {}
@@ -67,7 +67,7 @@ exports.getPrivateUserAbout = async(req, res, next) => {
       }
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get abouts data from About Collection`,
       data: err
@@ -125,7 +125,7 @@ exports.addPrivateUserAbout = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new about data from About Collection`,
       data: err
@@ -180,7 +180,7 @@ exports.updatePrivateUserAbout = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update about from About Collection`,
       data: err
@@ -222,7 +222,7 @@ exports.updatePrivateUserAboutImg = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update about image from About Collection`,
       data: err
@@ -263,7 +263,7 @@ exports.updatePrivateUserAboutPublish = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update about publish from About Collection`,
       data: err
@@ -284,7 +284,7 @@ exports.deletePrivateUserAbout = async(req, res, next) => {
     // check if about is published first
     let about = abouts.find(state => state._id === req.body.aboutId)
     if(about) {
-      if(about.status === 1) return res.status(400).json({
+      if(about.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete about! Please unpublished the about first.`,
         data: {}
@@ -324,7 +324,7 @@ exports.deletePrivateUserAbout = async(req, res, next) => {
       data: {}
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete about data from Home Collection`,
       data: err

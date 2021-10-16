@@ -31,8 +31,8 @@ exports.getPrivateContact = async (req, res, next) => {
     // get contacts data from redis
     let redisAllContact = await getAllContact()
     
-    let userContact = redisAllContact.find(contact => contact.creator === req.session.userId)
-    if(!userContact) return res.status(400).json({
+    let userContact = redisAllContact.find(contact => contact.creator === res.locals.userId)
+    if(!userContact) return res.status(200).json({
       success: false,
       error: `Failed to get contact data from Contact Collection`,
       data: {}
@@ -45,7 +45,7 @@ exports.getPrivateContact = async (req, res, next) => {
     })
   }
   catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get contact data from Contact Collection`,
       data: err
@@ -92,7 +92,7 @@ exports.addPrivateContact = async (req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new contact data from Contact Collection`,
       data: err
@@ -136,7 +136,7 @@ exports.updatePrivateContactPublish = async (req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update contact status publish from Contact Collection`,
       data: err
@@ -193,7 +193,7 @@ exports.updatePrivateContact = async (req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update contact data from Contact Collection`,
       data: err
@@ -212,7 +212,7 @@ exports.deletePrivateContact = async (req, res, next) => {
     // check if contact is published first
     let contact = redisAllContact.find(contact => contact._id === req.params.id)
     if (contact) {
-      if (contact.status === 1) return res.status(400).json({
+      if (contact.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete contact! Please unpublished the contact first.`,
         data: {}
@@ -234,7 +234,7 @@ exports.deletePrivateContact = async (req, res, next) => {
       data: {}
     })
   } catch (err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete contact data from Contact Collection`,
       data: err

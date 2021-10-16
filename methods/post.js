@@ -77,7 +77,7 @@ exports.getPublicPosts = async(req, res, next) => {
     })
   }
   catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get posts data from Posts Collection`,
       data: err
@@ -98,7 +98,7 @@ exports.getPublicPost = async(req, res, next) => {
 
     // get selected post info
     let post = posts.find(post => post._id === req.body.postId)
-    if(!post) return res.status(400).json({
+    if(!post) return res.status(200).json({
       success: false,
       error: `Failed to get post data. Please refresh the page or try again later.`,
       data: {}
@@ -119,7 +119,7 @@ exports.getPublicPost = async(req, res, next) => {
     })
   }
   catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get post data from Posts Collection`,
       data: err
@@ -172,7 +172,7 @@ exports.updatePublicPost = async(req, res, next) => {
     })
   }
   catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update a post data from Posts Collection`,
       data: err
@@ -250,7 +250,7 @@ exports.getPrivatePosts = async(req, res, next) => {
     })
   }
   catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get posts data from Posts Collection`,
       data: err
@@ -313,7 +313,7 @@ exports.addPrivatePost = async(req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new post data from Posts Collection`,
       data: err
@@ -357,7 +357,7 @@ exports.updatePrivatePostImg = async(req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update post image from Posts Collection`,
       data: err
@@ -400,7 +400,7 @@ exports.updatePrivatePostPublish = async(req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update post publish from Posts Collection`,
       data: err
@@ -489,7 +489,7 @@ exports.updatePrivatePost = async(req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update post data from Posts Collection`,
       data: err
@@ -510,7 +510,7 @@ exports.deletePrivatePost = async(req, res, next) => {
     // check if post is published first
     let post = posts.find(state => state._id === req.params.id)
     if(post) {
-      if(post.status === 1) return res.status(400).json({
+      if(post.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete post! Please unpublished the post first.`,
         data: {}
@@ -550,7 +550,7 @@ exports.deletePrivatePost = async(req, res, next) => {
       data: {}
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete post data from Post Collection`,
       data: err

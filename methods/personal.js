@@ -46,7 +46,7 @@ exports.getPrivateUserPersonal = async(req, res, next) => {
 
     // get active user info
     let user = users.find(user => user.status === 1)
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `Failed to get active user data from User Collection`,
       data: {}
@@ -65,7 +65,7 @@ exports.getPrivateUserPersonal = async(req, res, next) => {
       }
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get user personal data from User Collection`,
       data: err
@@ -86,7 +86,7 @@ exports.updatePrivateUserPersonal = async(req, res, next) => {
   
   if(personal.emails.backup !== 'none') {
     // check if email (backup) regex correct
-    if(!handleEmailRegex(personal.emails.backup)) return res.status(400).json({
+    if(!handleEmailRegex(personal.emails.backup)) return res.status(200).json({
       success: false,
       error: `Invalid email backup!`,
       data: {}
@@ -127,7 +127,7 @@ exports.updatePrivateUserPersonal = async(req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update user data from User Collection`,
       data: err
@@ -149,7 +149,7 @@ exports.updatePrivateUserPersonalPassword = async(req, res, next) => {
   try {
     // check if user exist
     let userExist = users.find(user => user._id === userId)
-    if(!userExist) return res.status(400).json({
+    if(!userExist) return res.status(200).json({
       success: false,
       error: `User doesn't exist!`,
       data: {}
@@ -157,14 +157,14 @@ exports.updatePrivateUserPersonalPassword = async(req, res, next) => {
 
     // check if user password match
     const validPassword = await bcrypt.compare(password.current, userExist.credentials.password)
-    if(!validPassword) return res.status(400).json({
+    if(!validPassword) return res.status(200).json({
       success: false,
       error: `User's password provided is not valid! Please try again later.`,
       data: {}
     })
 
     // check if user new password match
-    if(password.new.password !== password.new.passwordConfirm) return res.status(400).json({
+    if(password.new.password !== password.new.passwordConfirm) return res.status(200).json({
       success: false,
       error: `New password provided not match! Please try again later.`,
       data: {}
@@ -181,7 +181,7 @@ exports.updatePrivateUserPersonalPassword = async(req, res, next) => {
       } },
       { new: true }
     ).select('name credentials.emails')
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `Error while getting updated data! Please try again later.`,
       data: {}
@@ -201,7 +201,7 @@ exports.updatePrivateUserPersonalPassword = async(req, res, next) => {
       data: user
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update user password from User Collection`,
       data: err

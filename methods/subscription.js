@@ -49,7 +49,7 @@ exports.addPublicSubscription = async (req, res, next) => {
   
   // get contact info (active user)
   let creator = users.find(user => user.status === 1)
-  if(!creator) return res.status(400).json({
+  if(!creator) return res.status(200).json({
     success: false,
     error: `Something went wrong. Please refresh the page and try again later.`,
     data: {}
@@ -114,7 +114,7 @@ exports.addPublicSubscription = async (req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Newsletter mail sending failed. Please try again later.`,
       data: err
@@ -232,7 +232,7 @@ exports.updatePrivateSubscriptionNoty = async (req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update sub status noty from Subscription Collection`,
       data: err
@@ -277,7 +277,7 @@ exports.updatePrivateSubscriptionRead = async (req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update sub status read from Subscription Collection`,
       data: err
@@ -322,7 +322,7 @@ exports.updatePrivateSubscriptionReply = async (req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update sub status reply from Subscription Collection`,
       data: err
@@ -342,7 +342,7 @@ exports.deletePrivateSubscription = async (req, res, next) => {
     // check if sub is reply first
     let sub = subs.find(state => state._id === req.params.id)
     if (sub) {
-      if (sub.statusNoty === 0 || sub.statusRead === 0 || sub.statusReply === 0) return res.status(400).json({
+      if (sub.statusNoty === 0 || sub.statusRead === 0 || sub.statusReply === 0) return res.status(200).json({
         success: false,
         error: `Unable to delete sub! Please update status (noty, read & reply) to read and replied first.`,
         data: {}
@@ -364,7 +364,7 @@ exports.deletePrivateSubscription = async (req, res, next) => {
       data: {}
     })
   } catch (err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete sub data from Subscription Collection`,
       data: err

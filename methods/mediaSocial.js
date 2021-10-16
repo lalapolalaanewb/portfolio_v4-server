@@ -47,11 +47,11 @@ exports.getPrivateMediaSocials = async(req, res, next) => {
     return res.status(200).json({
       success: true,
       count: mediaSocials.length,
-      data: mediaSocials.sort((a, b) => a.name < b.name ? -1 : 1)
+      data: mediaSocials.sort((a, b) => a._id > b._id ? -1 : 1)
     })
   }
   catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get media social data to Mediasocial Collection`,
       data: err
@@ -74,7 +74,7 @@ exports.addPrivateMediaSocial = async(req, res, next) => {
   const newMediaSocial = new Mediasocial({
     name: name,
     abbreviation: abbreviation,
-    creator: req.session.userId // add current logged-in user ID
+    creator: res.locals.userId // add current logged-in user ID
   })
 
   newMediaSocial.save()
@@ -94,7 +94,7 @@ exports.addPrivateMediaSocial = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new media social data to Mediasocial Collection`,
       data: err
@@ -145,7 +145,7 @@ exports.updatePrivateMediaSocial = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update media social data from Mediasocial Collection`,
       data: err
@@ -166,7 +166,7 @@ exports.deletePrivateMediaSocial = async(req, res, next) => {
     // check if data being use in Socialmedia Model
     // let socialMedias = await Socialmedia.find().where({ icon: req.params.id })
     let socialMediasUsed = socialMedias.filter(socialMedia => socialMedia.icon === req.params.id)
-    if(socialMediasUsed.length > 0) return res.status(400).json({
+    if(socialMediasUsed.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete data from Socialmedia Collection first`,
       data: {}
@@ -187,7 +187,7 @@ exports.deletePrivateMediaSocial = async(req, res, next) => {
       data: {}
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete media social data from Mediasocial Collection`,
       data: err

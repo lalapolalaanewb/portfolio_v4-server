@@ -52,7 +52,7 @@ exports.getPrivateUserHome = async(req, res, next) => {
     
     // get all user homes
     let userHomes = homes.filter(state => user.homes.includes(state._id))
-    if(!userHomes) return res.status(400).json({
+    if(!userHomes) return res.status(200).json({
       success: false,
       error: `Failed to get user's homes data from Home Collection`,
       data: {}
@@ -67,7 +67,7 @@ exports.getPrivateUserHome = async(req, res, next) => {
       }
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get homes data from Home Collection`,
       data: err
@@ -126,7 +126,7 @@ exports.addPrivateUserHome = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new home data from Home Collection`,
       data: err
@@ -183,7 +183,7 @@ exports.updatePrivateUserHome = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update about from Home Collection`,
       data: err
@@ -225,7 +225,7 @@ exports.updatePrivateUserHomeImg = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update about image from Home Collection`,
       data: err
@@ -266,7 +266,7 @@ exports.updatePrivateUserHomePublish = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update about publish from Home Collection`,
       data: err
@@ -287,7 +287,7 @@ exports.deletePrivateUserHome = async(req, res, next) => {
     // check if home is published first
     let home = homes.find(state => state._id === req.body.homeId)
     if(home) {
-      if(home.status === 1) return res.status(400).json({
+      if(home.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete home! Please unpublished the home first.`,
         data: {}
@@ -327,7 +327,7 @@ exports.deletePrivateUserHome = async(req, res, next) => {
       data: {}
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete home data from Home Collection`,
       data: err

@@ -45,7 +45,7 @@ exports.getPrivateUserSocial = async(req, res, next) => {
 
     // get active user
     let user = users.find(user => user.status === 1)
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `No active user found from User Collection`,
       data: {}
@@ -73,7 +73,7 @@ exports.getPrivateUserSocial = async(req, res, next) => {
       data: user
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get socials data from Social Collection`,
       data: err
@@ -129,7 +129,7 @@ exports.addPrivateUserSocial = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new social data from Social Collection`,
       data: err
@@ -180,7 +180,7 @@ exports.updatePrivateUserSocial = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update social from Social Collection`,
       data: err
@@ -223,7 +223,7 @@ exports.updatePrivateUserSocialPublish = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update social publish from Social Collection`,
       data: err
@@ -244,7 +244,7 @@ exports.deletePrivateUserSocial = async(req, res, next) => {
     // check if social is published first
     let social = socialMedias.find(state => state._id === req.body.socialId)
     if(social) {
-      if(social.status === 1) return res.status(400).json({
+      if(social.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete social! Please unpublished the social first.`,
         data: {}
@@ -281,7 +281,7 @@ exports.deletePrivateUserSocial = async(req, res, next) => {
       data: {}
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete social data from Social Collection`,
       data: err

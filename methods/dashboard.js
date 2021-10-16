@@ -85,7 +85,7 @@ exports.getPrivateDashboard = async(req, res, next) => {
       } }
     ])
     // - throw an error if user not found
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `Failed to get active user data from User Collection`,
       data: {}
@@ -155,7 +155,7 @@ exports.getPrivateDashboard = async(req, res, next) => {
       }
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get data from Database`,
       data: err
@@ -277,7 +277,7 @@ exports.updatePrivateDashboardRedisAllData = async(req, res, next) => {
       } }
     ])
     // - throw an error if user not found
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `Failed to get active user data from User Collection`,
       data: {}
@@ -332,7 +332,7 @@ exports.updatePrivateDashboardRedisAllData = async(req, res, next) => {
       }
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to reset redis data. Please try again later.`,
       data: err

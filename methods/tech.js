@@ -71,11 +71,11 @@ exports.getPrivateTechs = async(req, res, next) => {
     return res.status(200).json({
       success: true,
       count: redisAllTech.length,
-      data: redisAllTech.sort((a, b) => a.name < b.name ? -1 : 1)
+      data: redisAllTech.sort((a, b) => a._id > b._id ? -1 : 1)
     })
   }
   catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get techs from Tech Collection`,
       data: err
@@ -98,7 +98,7 @@ exports.addPrivateTech = async(req, res, next) => {
   const newTech = new Technology({
     name: name,
     abbreviation: abbreviation,
-    creator: req.session.userId // add current logged-in user ID
+    creator: res.locals.userId // add current logged-in user ID
   })
 
   newTech.save()
@@ -118,7 +118,7 @@ exports.addPrivateTech = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new tech data to Tech Collection`,
       data: err
@@ -169,7 +169,7 @@ exports.updatePrivateTech = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update tech data from Tech Collection`,
       data: err
@@ -187,14 +187,14 @@ exports.deletePrivateTech = async(req, res, next) => {
     let redisAllTech = redisAllData.techs
 
     // check if tech being used in Skill Collection
-    if(handleTechExtract(redisAllData.skills, req.params.id) === 'exist') return res.status(400).json({
+    if(handleTechExtract(redisAllData.skills, req.params.id) === 'exist') return res.status(200).json({
       success: false,
       error: `Please delete tech data from Skill Collection first`,
       data: {}
     })
 
     // check if tech being used in Project Collection
-    if(handleTechExtract(redisAllData.projects, req.params.id) === 'exist') return res.status(400).json({
+    if(handleTechExtract(redisAllData.projects, req.params.id) === 'exist') return res.status(200).json({
       success: false,
       error: `Please delete tech data from Project Collection first`,
       data: {}
@@ -203,7 +203,7 @@ exports.deletePrivateTech = async(req, res, next) => {
     // check if tech being used in Post Collection
     // let posts = await Post.find().where({ tech: req.params.id })
     let posts = redisAllData.posts.filter(state => state.tech === req.params.id)
-    if(posts.length > 0) return res.status(400).json({
+    if(posts.length > 0) return res.status(200).json({
       success: false,
       error: `Please delete tech data from Post Collection first`,
       data: {}
@@ -224,7 +224,7 @@ exports.deletePrivateTech = async(req, res, next) => {
       data: {}
     })
   } catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete tech data from Tech Collection`,
       data: err

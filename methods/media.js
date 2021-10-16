@@ -55,7 +55,7 @@ exports.getPrivateMedias = async (req, res, next) => {
       data: medias.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     })
   } catch (err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get medias data from Media Collection`,
       data: err
@@ -72,7 +72,7 @@ exports.addPrivateMedia = async (req, res, next) => {
     await uploadMultiImgFile(req, res)
 
     // photos upload limit
-    if (req.files.length <= 0) return res.status(400).json({
+    if (req.files.length <= 0) return res.status(200).json({
       success: false,
       error: `You must at least upload 1 image!`,
       data: {}
@@ -123,12 +123,12 @@ exports.addPrivateMedia = async (req, res, next) => {
       data: selectedMedias
     })
   } catch (err) { console.log(err)
-    if (err.code === 'LIMIT_UNEXPECTED_FILE') return res.status(400).json({
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') return res.status(200).json({
       success: false,
       error: `You can upload only 10 images at a time!`,
       data: err.code
     })
-    else return res.status(500).json({
+    else return res.status(200).json({
       success: false,
       error: `Failed to add new post media/s from Media Collection`,
       data: err
@@ -173,7 +173,7 @@ exports.updatePrivateMediaPublish = async (req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update media publish from Media Collection`,
       data: err
@@ -224,7 +224,7 @@ exports.updatePrivateMedia = async (req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update media data from Media Collection`,
       data: err
@@ -244,7 +244,7 @@ exports.deletePrivateMedia = async (req, res, next) => {
     // check if media is published first
     let media = await Media.findById(req.params.id)
     if (media) {
-      if (media.status === 1) return res.status(400).json({
+      if (media.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete media! Please unpublished the media first.`,
         data: {}
@@ -269,7 +269,7 @@ exports.deletePrivateMedia = async (req, res, next) => {
       data: {}
     })
   } catch (err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete media data from Media Collection`,
       data: err

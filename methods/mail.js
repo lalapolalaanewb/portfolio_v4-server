@@ -48,7 +48,7 @@ exports.getPublicContactStatus = async (req, res, next) => {
   
   // get active contact info
   let contact = contacts.find(state => state.creator === user._id)
-  if(!contact) return res.status(400).json({
+  if(!contact) return res.status(200).json({
     success: false,
     error: `Failed to get active user contact status data.`,
     data: {}
@@ -166,7 +166,7 @@ exports.addPublicMail = async (req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Mail sending failed. Please try again later.`,
       data: err
@@ -193,7 +193,7 @@ exports.getPrivateMails = async (req, res, next) => {
     // console.log('old session', sessionData)
     // get user contact info
     let contact = contacts.find(state => state.creator === res.locals.userId)
-    if(!contact) return res.status(400).json({
+    if(!contact) return res.status(200).json({
       success: false,
       error: `Failed to get active user contact data from Contact Collection`,
       data: {}
@@ -215,7 +215,7 @@ exports.getPrivateMails = async (req, res, next) => {
     })
   }
   catch(err) { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get mails from Mail Collection`,
       data: err
@@ -314,7 +314,7 @@ exports.updatePrivateMailNoty = async (req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update mail status noty from Mail Collection`,
       data: err
@@ -357,7 +357,7 @@ exports.updatePrivateMailRead = async (req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update mail status read from Mail Collection`,
       data: err
@@ -400,7 +400,7 @@ exports.updatePrivateMailReply = async (req, res, next) => {
     })
   })
   .catch(err => { console.log(err)
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update mail status reply from Mail Collection`,
       data: err
@@ -421,7 +421,7 @@ exports.deletePrivateMail = async (req, res, next) => {
     // check if mail is reply first
     let mail = mails.find(state => state._id === req.params.id)
     if (mail) {
-      if (mail.statusNoty === 0 || mail.statusRead === 0 || mail.statusReply === 0) return res.status(400).json({
+      if (mail.statusNoty === 0 || mail.statusRead === 0 || mail.statusReply === 0) return res.status(200).json({
         success: false,
         error: `Unable to delete mail! Please update status (noty, read & reply) to read and replied first.`,
         data: {}
@@ -458,7 +458,7 @@ exports.deletePrivateMail = async (req, res, next) => {
       data: {}
     })
   } catch (err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete mail data from Mail Collection`,
       data: err

@@ -35,7 +35,7 @@ const handleGetTechIds = async (techs, techNames) => {
 
   // let techObjIds = await Technology.find().select('_id').where('name').in(techNames).exec()
   let techObjIds = techs.filter(tech => techNames.includes(tech.name))
-  if(!techObjIds) return res.status(500).json({
+  if(!techObjIds) return res.status(200).json({
     success: false,
     error: `No tech found or match with Technology Collection`,
     data: {}
@@ -62,7 +62,7 @@ exports.getPublicSkills = async(req, res, next) => {
 
     // get active user
     let user = users.find(user => user.status === 1)
-    if(!user) return res.status(400).json({
+    if(!user) return res.status(200).json({
       success: false,
       error: `No active user found.`,
       data: {}
@@ -88,7 +88,7 @@ exports.getPublicSkills = async(req, res, next) => {
       data: userSkills.sort((a, b) => a.name < b.name ? -1 : 1)
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get skills data from Skill Collection`,
       data: err
@@ -151,10 +151,10 @@ exports.getPrivateSkills = async(req, res, next) => {
     return res.status(200).json({
       success: true,
       count: skills.length,
-      data: skills.sort((a, b) => a.name < b.name ? -1 : 1)
+      data: skills.sort((a, b) => a._id > b._id ? -1 : 1)
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get skills data from Skill Collection`,
       data: err
@@ -181,13 +181,13 @@ exports.addPrivateSkill = async(req, res, next) => {
   const newSkill = new Skill({
     name: name,
     techs: techIds,
-    creator: req.session.userId // add current logged-in user ID
+    creator: res.locals.userId // add current logged-in user ID
   })
 
   newSkill.save()
   .then(async data => {
     await User.updateOne(
-      { _id: req.session.userId },
+      { _id: res.locals.userId },
       { $push: { skills: data._id } },
     )
 
@@ -198,7 +198,7 @@ exports.addPrivateSkill = async(req, res, next) => {
     await setAllSkill(skills)
     // add & update new skill id to user/creator data
     users.forEach(user => {
-      if(user._id === req.session.userId) user.skills.push(data._id)
+      if(user._id === res.locals.userId) user.skills.push(data._id)
     })
     // set new users redis
     await setAllUser(users)
@@ -212,7 +212,7 @@ exports.addPrivateSkill = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new skill data to Skill Collection`,
       data: err
@@ -297,7 +297,7 @@ exports.updatePrivateSkill = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update skill data from Skill Collection`,
       data: err
@@ -360,7 +360,7 @@ exports.deletePrivateSkill = async(req, res, next) => {
       data: {}
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete skill data from SKill Collection`,
       data: err

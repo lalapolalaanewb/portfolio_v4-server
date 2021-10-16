@@ -41,7 +41,7 @@ exports.getPublicPolicyComment = async(req, res, next) => {
 
   // get active policy info
   let policy = policies.find(policy => policy.status === 1)
-  if(!policy) return res.status(400).json({
+  if(!policy) return res.status(200).json({
     success: false,
     error: `Failed to get active comment policy data.`,
     data: {}
@@ -77,11 +77,11 @@ exports.getPrivatePolicies = async(req, res, next) => {
     return res.status(200).json({
       success: true,
       count: policies,
-      data: policies.sort((a, b) => a.name < b.name ? -1 : 1)
+      data: policies.sort((a, b) => a._id > b._id ? -1 : 1)
     })
   }
   catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to get policies data from Policy Collection`,
       data: err
@@ -105,7 +105,7 @@ exports.addPrivatePolicy = async(req, res, next) => {
     name: handleNoneInput(name), 
     privacy: handleNoneInput(privacy),
     comment: handleNoneInput(comment),
-    creator: req.session.userId // add current logged-in user ID 
+    creator: res.locals.userId // add current logged-in user ID 
   })
   
   newPolicy.save()
@@ -125,7 +125,7 @@ exports.addPrivatePolicy = async(req, res, next) => {
     })
   })
   .catch(err => {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to add new policy data from Policy Collection`,
       data: err
@@ -178,7 +178,7 @@ exports.updatePrivatePolicy = async(req, res, next) => {
     })
   })
   .catch(err => { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update policy from Policy Collection`,
       data: err
@@ -200,7 +200,7 @@ exports.updatePrivatePolicyPublish = async(req, res, next) => {
     // check if other policy is published
     let policyActive = policies.find(policy => policy.status === 1)
     if(policyActive) {
-      if(policyActive._id.toString() !== policyId) return res.status(400).json({
+      if(policyActive._id.toString() !== policyId) return res.status(200).json({
         success: false,
         error: `Policy ${policyActive.name} still ACTIVE! Please deactivate the policy first.`,
         data: {}
@@ -231,7 +231,7 @@ exports.updatePrivatePolicyPublish = async(req, res, next) => {
       data: policy
     })
   } catch(err) {
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to update policy publish from Policy Collection`,
       data: err
@@ -251,7 +251,7 @@ exports.deletePrivatePolicy = async(req, res, next) => {
     // check if policy is published first
     let policy = policies.find(policy => policy._id === req.params.id)
     if(policy) {
-      if(policy.status === 1) return res.status(400).json({
+      if(policy.status === 1) return res.status(200).json({
         success: false,
         error: `Unable to delete policy! Please unpublished the policy first.`,
         data: {}
@@ -273,7 +273,7 @@ exports.deletePrivatePolicy = async(req, res, next) => {
       data: {}
     })
   } catch(err) { 
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       error: `Failed to delete policy data from Policy Collection`,
       data: err
