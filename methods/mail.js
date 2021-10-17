@@ -72,6 +72,12 @@ exports.addPublicMail = async (req, res, next) => {
     mail, contactId
   } = req.body
 
+  if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail?.fromTo) == false) return res.status(200).json({
+    success: false,
+    error: `Wrong email format! Please insert the correct email format.`,
+    data: {}
+  })
+
   // get contacts & mails data from redis
   let redisAllData = await getAllData()
   let contacts = redisAllData.contacts
