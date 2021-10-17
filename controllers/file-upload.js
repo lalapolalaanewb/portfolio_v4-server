@@ -9,11 +9,11 @@ const fileRemove = require('fs')
 
 const {
   // File Base FOlder Location
-  FILE_BASE_FOLDER_LOCATION = path.resolve(__dirname + '/'),
+  FILE_BASE_FOLDER_LOCATION = path.resolve(__dirname + '/', '../../'),
   // Image Folder Location
-  IMAGE_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/public/images/',
+  IMAGE_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/portfolio_v4-next_redux/public/images/',
   // Pdf Folder Location
-  PDF_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/public/files/'
+  PDF_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/portfolio_v4-next_redux/public/files/'
 } = process.env
 
 // storage img

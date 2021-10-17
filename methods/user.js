@@ -12,6 +12,7 @@ const {
   // Redis Promises
   setAsync
 } = require('../controllers')
+const path = require('path')
 
 /** Page Specific Functions */
 // get all required data from redis
@@ -108,6 +109,9 @@ exports.getPublicUserFooterPublic = async(req, res, next) => {
 // @access  Public (Only need Admin Public Access Key)
 exports.getPublicUserHome = async(req, res, next) => {
   try {
+    // console.log(path.resolve(__dirname + '/', '../../'))
+    // console.log(path.resolve(__dirname + '/', '../../') + '/portfolio_v4-next_redux/public/images/')
+    // console.log(path.resolve(__dirname + '/', '../../') + '/portfolio_v4-next_redux/public/files/')
     // set all available data to redis
     // await setDefaultAllData()
 
