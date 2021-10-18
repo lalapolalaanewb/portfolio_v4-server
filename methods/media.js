@@ -91,7 +91,7 @@ exports.addPrivateMedia = async (req, res, next) => {
         imgAlt: file.originalname,
         dimension: 'dimension',
         size: file.size,
-        creator: req.session.userId
+        creator: res.locals.userId
       })
     })
 
