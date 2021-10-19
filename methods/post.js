@@ -282,13 +282,13 @@ exports.addPrivatePost = async(req, res, next) => {
     description: handleNoneInput(description),
     // publishedAt: new Date('October 3, 2020').toISOString(),
     publishedAt: new Date(Date.now()).toISOString(),
-    creator: req.session.userId // add current logged-in user ID
+    creator: res.locals.userId // add current logged-in user ID
   })
   
   post.save()
   .then(async data => {
     await User.updateOne(
-      { _id: req.session.userId },
+      { _id: res.locals.userId },
       { $push: { posts: data._id } },
     )
 
@@ -299,7 +299,7 @@ exports.addPrivatePost = async(req, res, next) => {
     await setAllPost(posts)
     // add & update new post id to user/creator data
     users.forEach(user => {
-      if(user._id === req.session.userId) user.posts.push(data._id)
+      if(user._id === res.locals.userId) user.posts.push(data._id)
     })
     // set new users redis
     await setAllUser(users)

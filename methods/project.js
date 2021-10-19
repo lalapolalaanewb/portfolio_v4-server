@@ -277,13 +277,13 @@ exports.addPrivateProject = async(req, res, next) => {
     },
     techs: techIds,
     publishedAt: new Date(Date.now()).toISOString(),
-    creator: req.session.userId // add current logged-in user ID
+    creator: res.locals.userId // add current logged-in user ID
   })
 
   project.save()
   .then(async data => {
     await User.updateOne(
-      { _id: req.session.userId },
+      { _id: res.locals.userId },
       { $push: { projects: data._id } },
     )
 
@@ -294,7 +294,7 @@ exports.addPrivateProject = async(req, res, next) => {
     await setAllProject(projects)
     // add & update new project id to user/creator data
     users.forEach(user => {
-      if(user._id === req.session.userId) user.projects.push(data._id)
+      if(user._id === res.locals.userId) user.projects.push(data._id)
     })
     // set new users redis
     await setAllUser(users)
