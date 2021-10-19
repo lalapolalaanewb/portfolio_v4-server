@@ -27,7 +27,8 @@ router.route('/private/get')
 // @route   POST /api/v1/medias/private/add/
 // @access  Private (Require sessionId & uid)
 router.route('/private/add')
-  .post(redirect2Login, cors(corsOptions), addPrivateMedia)
+  .post(redirect2Login, addPrivateMedia)
+  // .post(redirect2Login, cors(corsOptions), addPrivateMedia)
   // .post(addPrivateMedia)
 
 // @desc    Portfolio V4 Media Dashboard (Update A Media Publishment)
