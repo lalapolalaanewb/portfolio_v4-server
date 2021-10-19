@@ -8,6 +8,12 @@ const {
 } = require('../controllers')
 // Project Methods
 const { getPrivateMedias, addPrivateMedia, updatePrivateMediaPublish, updatePrivateMedia, deletePrivateMedia } = require('../methods')
+// Cors
+const cors = require('cors')
+let corsOptions = {
+  origin: 'https://lalapolalaanewb.com',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 /** Routes */
 // @desc    Portfolio V4 Media Dashboard (Get All Medias)
@@ -21,7 +27,7 @@ router.route('/private/get')
 // @route   POST /api/v1/medias/private/add/
 // @access  Private (Require sessionId & uid)
 router.route('/private/add')
-  .post(redirect2Login, addPrivateMedia)
+  .post(redirect2Login, cors(corsOptions), addPrivateMedia)
   // .post(addPrivateMedia)
 
 // @desc    Portfolio V4 Media Dashboard (Update A Media Publishment)
