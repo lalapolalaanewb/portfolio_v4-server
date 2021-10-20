@@ -42,7 +42,8 @@ router.route('/update')
 // @route   POST /api/v1/users/private/profile/home/update/image
 // @access  Private (Require sessionId & uid)
 router.route('/update/image')
-  .post(redirect2Login, uploadImgFile.single('file'), updatePrivateUserHomeImg)
+  .post(redirect2Login, updatePrivateUserHomeImg)
+  // .post(redirect2Login, uploadImgFile.single('file'), updatePrivateUserHomeImg)
   // .post(uploadImgFile.single('file'), updatePrivateUserHomeImg)
 
 // @desc    Portfolio V4 Users Profile (Update A User's Home Publish)

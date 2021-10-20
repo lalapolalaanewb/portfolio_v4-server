@@ -10,8 +10,16 @@ const {
   // Redis Data
   getDefaultAllData,
   // Redis Promises
-  setAsync 
+  setAsync, 
+  // uploadImgFile
 } = require('../controllers')
+
+// Mutler
+const multer = require('multer')
+// Path
+const path = require('path')
+// Util
+const util = require('util')
 
 /** Page Specific Functions */
 // get all required data from redis
@@ -191,46 +199,130 @@ exports.updatePrivateUserHome = async(req, res, next) => {
   })
 }
 
+const {
+  // File Base FOlder Location
+  FILE_BASE_FOLDER_LOCATION = path.resolve(__dirname + '/', '../../'),
+  // Image Folder Location
+  IMAGE_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/portfolio_v4-next_redux/public/images/',
+  // Pdf Folder Location
+  PDF_FOLDER_LOCATION = FILE_BASE_FOLDER_LOCATION + '/portfolio_v4-next_redux/public/files/'
+} = process.env
+
+// storage img
+const storageImgFile = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, IMAGE_FOLDER_LOCATION)
+  },
+  filename: (req, file, cb) => { console.log('file: ', file)
+    // let ext = file.mimetype.split('/')[1]
+    cb(null, file.originalname)
+    // cb(null, file.originalname + "." + ext)
+    // cb(null, new Date().toISOString().replace(/[-T:\.Z]/g, "") + '-' + file.originalname)
+    // cb(null, new Date().toISOString().replace(/[-T:\.Z]/g, "") + '-' + file.originalname + "." + ext)
+  }
+})
+
+// filter img types
+const filterImgFile = (req, file, cb) => {
+  const fileTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/svg+xml']
+  
+  if(fileTypes.includes(file.mimetype)) cb(null, true)
+  else cb('Only .png .jpg .jpeg & image/svg+xml format allowed!', false)
+}
+
+// Img FIle Upload Middleware
+const uploadImgFile = multer({
+  storage: storageImgFile,
+  filterImgFile: filterImgFile
+  // limits: { fieldSize: 10000000000 }
+}).single('file')
+
+const pp = util.promisify(uploadImgFile)
+
 // @desc    Portfolio V4 Users Profile (Update A User's Home Img)
 // @route   POST /api/v1/users/private/profile/home/update/image
 // @access  Private (Require sessionId & uid)
 exports.updatePrivateUserHomeImg = async(req, res, next) => {
-  let { homeId, imgSrc } = req.body
+  await pp(req, res, async (err) => {
+    console.log('req.body: ', req.body)
+    console.log('req.file: ', req.file)
 
-  // - remove image from server images folder
-  handleImgRemove(res, imgSrc)
+    if(err) console.log('err: ', err)
 
-  // get users & homes data from redis
-  let redisAllData = await getAllData()
-  let homes = redisAllData.homes
+    let { homeId, imgSrc } = req.body
 
-  await Home.findByIdAndUpdate(
-    { _id: homeId },
-    { $set: { imgSrc: req.file.originalname } },
-    { new: true }
-  )
-  .then(async data => {
-    /** update homes redis */
-    // update home info
-    homes.forEach(state => {
-      if(state._id === homeId) state.imgSrc = req.file.originalname
+    // - remove image from server images folder
+    handleImgRemove(res, imgSrc)
+
+    // get users & homes data from redis
+    let redisAllData = await getAllData()
+    let homes = redisAllData.homes
+
+    await Home.findByIdAndUpdate(
+      { _id: homeId },
+      { $set: { imgSrc: req.file.originalname } },
+      { new: true }
+    )
+    .then(async data => {
+      /** update homes redis */
+      // update home info
+      homes.forEach(state => {
+        if(state._id === homeId) state.imgSrc = req.file.originalname
+      })
+      // set new homes redis
+      await setAllHome(homes)
+
+      return res.status(200).json({
+        success: true,
+        count: data.length,
+        data: data
+      })
     })
-    // set new homes redis
-    await setAllHome(homes)
-
-    return res.status(200).json({
-      success: true,
-      count: data.length,
-      data: data
+    .catch(err => {
+      return res.status(200).json({
+        success: false,
+        error: `Failed to update about image from Home Collection`,
+        data: err
+      })
     })
   })
-  .catch(err => {
-    return res.status(200).json({
-      success: false,
-      error: `Failed to update about image from Home Collection`,
-      data: err
-    })
-  })
+  
+  // let { homeId, imgSrc } = req.body
+
+  // // - remove image from server images folder
+  // handleImgRemove(res, imgSrc)
+
+  // // get users & homes data from redis
+  // let redisAllData = await getAllData()
+  // let homes = redisAllData.homes
+
+  // await Home.findByIdAndUpdate(
+  //   { _id: homeId },
+  //   { $set: { imgSrc: req.file.originalname } },
+  //   { new: true }
+  // )
+  // .then(async data => {
+  //   /** update homes redis */
+  //   // update home info
+  //   homes.forEach(state => {
+  //     if(state._id === homeId) state.imgSrc = req.file.originalname
+  //   })
+  //   // set new homes redis
+  //   await setAllHome(homes)
+
+  //   return res.status(200).json({
+  //     success: true,
+  //     count: data.length,
+  //     data: data
+  //   })
+  // })
+  // .catch(err => {
+  //   return res.status(200).json({
+  //     success: false,
+  //     error: `Failed to update about image from Home Collection`,
+  //     data: err
+  //   })
+  // })
 }
 
 // @desc    Portfolio V4 Users Profile (Update A User's Home Publish)
