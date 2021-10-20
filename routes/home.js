@@ -15,6 +15,8 @@ const {
   updatePrivateUserHome, updatePrivateUserHomeImg, updatePrivateUserHomePublish,
   deletePrivateUserHome, 
 } = require('../methods')
+// Timeout (handle file upload)
+const timeout = require('connect-timeout')
 
 /** Routes */
 // @desc    Portfolio V4 User Profile (Get A User's About)
@@ -42,7 +44,7 @@ router.route('/update')
 // @route   POST /api/v1/users/private/profile/home/update/image
 // @access  Private (Require sessionId & uid)
 router.route('/update/image')
-  .post(redirect2Login, updatePrivateUserHomeImg)
+  .post(redirect2Login, timeout('30s'), updatePrivateUserHomeImg)
   // .post(redirect2Login, uploadImgFile.single('file'), updatePrivateUserHomeImg)
   // .post(uploadImgFile.single('file'), updatePrivateUserHomeImg)
 
