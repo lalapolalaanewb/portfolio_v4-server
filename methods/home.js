@@ -14,6 +14,10 @@ const {
   // uploadImgFile
 } = require('../controllers')
 
+// File 
+const fs = require('fs')
+// Busboy
+const Busboy = require('busboy')
 // Mutler
 const multer = require('multer')
 // Path
@@ -243,13 +247,68 @@ const pp = util.promisify(uploadImgFile)
 // @route   POST /api/v1/users/private/profile/home/update/image
 // @access  Private (Require sessionId & uid)
 exports.updatePrivateUserHomeImg = async(req, res, next) => {
-  await pp(req, res, async (err) => {
-    console.log('req.body: ', req.body)
-    console.log('req.file: ', req.file)
+  let homeId, imgSrc, filename2save
 
-    if(err) console.log('err: ', err)
-
+  const busboy = new Busboy({ headers: req.headers })
+  busboy.on('file', async (fieldname, file, filename, encoding, mimetype) => {
     let { homeId, imgSrc } = req.body
+
+    console.log('homeId: ', homeId)
+    console.log('imgSrc: ', imgSrc)
+    console.log('fieldname: ', fieldname)
+    console.log('file: ,', file)
+    console.log('filename: ', filename)
+    console.log('encoding: ', encoding)
+    console.log('mimetype: ', mimetype)
+
+    const fileTypes = ['image/png', 'image/jpg', 'image/jpeg', 'image/svg+xml']
+  
+    if(!fileTypes.includes(mimetype)) {
+      file.resume()
+      return res.status(200).json({
+        success: false,
+        error: `Only .png .jpg .jpeg & image/svg+xml format allowed!`,
+        data: {}
+      })
+    }
+    else {
+      const saveTo = IMAGE_FOLDER_LOCATION; console.log(saveTo)
+      file.pipe(fs.createWriteStream(saveTo + filename))
+
+      filename2save = filename
+
+      // return res.status(200).json({
+      //   success: true,
+      //   count: 1,
+      //   data: {}
+      // })
+    }
+  })
+  busboy.on('field', function(fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) {
+    console.log('1')
+    console.log('Field [' + fieldname + ']: value: ' + val);
+
+    if(fieldname == 'homeId') homeId = val
+    if(fieldname == 'imgSrc') imgSrc = val
+    // return res.status(200).json({
+    //   success: true,
+    //   count: 1,
+    //   data: {}
+    // })
+  })
+  busboy.on('finish', async () => {
+    // res.writeHead(200, { 'Connection': 'close' })
+    // res.end("That's all folks!")
+    // let { homeId, imgSrc } = req.body
+
+    console.log('homeId: ', homeId)
+    console.log('imgSrc: ', imgSrc)
+
+    // return res.status(200).json({
+    //   success: true,
+    //   count: 1,
+    //   data: {}
+    // })
 
     // - remove image from server images folder
     handleImgRemove(res, imgSrc)
@@ -260,14 +319,14 @@ exports.updatePrivateUserHomeImg = async(req, res, next) => {
 
     await Home.findByIdAndUpdate(
       { _id: homeId },
-      { $set: { imgSrc: req.file.originalname } },
+      { $set: { imgSrc: filename2save } },
       { new: true }
     )
     .then(async data => {
       /** update homes redis */
       // update home info
       homes.forEach(state => {
-        if(state._id === homeId) state.imgSrc = req.file.originalname
+        if(state._id === homeId) state.imgSrc = filename2save
       })
       // set new homes redis
       await setAllHome(homes)
@@ -286,6 +345,57 @@ exports.updatePrivateUserHomeImg = async(req, res, next) => {
       })
     })
   })
+  req.pipe(busboy)
+
+  // return res.status(200).json({
+  //   success: true,
+  //   count: 1,
+  //   data: {}
+  // })
+
+  // await pp(req, res, async (err) => {
+  //   console.log('req.body: ', req.body)
+  //   console.log('req.file: ', req.file)
+
+  //   if(err) console.log('err: ', err)
+
+  //   let { homeId, imgSrc } = req.body
+
+  //   // - remove image from server images folder
+  //   handleImgRemove(res, imgSrc)
+
+  //   // get users & homes data from redis
+  //   let redisAllData = await getAllData()
+  //   let homes = redisAllData.homes
+
+  //   await Home.findByIdAndUpdate(
+  //     { _id: homeId },
+  //     { $set: { imgSrc: req.file.originalname } },
+  //     { new: true }
+  //   )
+  //   .then(async data => {
+  //     /** update homes redis */
+  //     // update home info
+  //     homes.forEach(state => {
+  //       if(state._id === homeId) state.imgSrc = req.file.originalname
+  //     })
+  //     // set new homes redis
+  //     await setAllHome(homes)
+
+  //     return res.status(200).json({
+  //       success: true,
+  //       count: data.length,
+  //       data: data
+  //     })
+  //   })
+  //   .catch(err => {
+  //     return res.status(200).json({
+  //       success: false,
+  //       error: `Failed to update about image from Home Collection`,
+  //       data: err
+  //     })
+  //   })
+  // })
   
   // let { homeId, imgSrc } = req.body
 

@@ -46,13 +46,13 @@ app.use(session({
 app.use(morgan('dev'))
 // if(process.env.NODE_ENV === 'development') { app.use(morgan('dev')) }
 // Static Folder
-// if(process.env.NODE_ENV === 'production') {
-//   // set static folder
-//   app.use(express.static('../porfolio_v4-next_redux/.next'))
-//   // app.use(express.static('client/build'))
-//   // re-route everything to homepage (any other routes other than declared in Routes Middlewares)
-//   // app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')))
-// }
+if(process.env.NODE_ENV === 'production') {
+  // set static folder
+  app.use(express.static(path.resolve(__dirname + '/', '../') + '/portfolio_v4-next_redux/.next'))
+  // app.use(express.static('client/build'))
+  // re-route everything to homepage (any other routes other than declared in Routes Middlewares)
+  // app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')))
+}
 
 /** Routes Middlewares */
 app.use('/api/v1/auth', require('./routes/auth'))
@@ -75,6 +75,7 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
 )
 .then(response => {
+  // console.log(path.resolve(__dirname + '/', '../') + '/portfolio_v4-next_redux/public')
   console.log(`Succesfully connected to db at ${response.connection.host}`.green.bold)
   app.listen(process.env.PORT || 5400, console.log(`Server is up & running at PORT ${process.env.PORT}`.green.bold))
 })
